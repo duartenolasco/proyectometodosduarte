@@ -2,10 +2,11 @@
 # 0909-21-18812
 
 
-import matplotlib.pyplot as plt
-import numpy as np
+import matplotlib.pyplot as plt #para visualización de gráficos
+import numpy as np #para todos los calculos númericos
 
-# Función para ampliar el numerador del polinomio L_i(x)
+# Función para ampliar el numerador del polinomio Li(x)
+# O sea genera el numerador de Li correspondiente a un punto de interpolacion
 def ampliarNumerador(puntos, i):
     n = len(puntos)
     coeficienteVariable = np.zeros(n)
@@ -26,7 +27,14 @@ def ampliarNumerador(puntos, i):
 
     return " + ".join(respuestaAmpliada)  # Retorna el numerador como una cadena de texto
 
+#Inicializa los coeficientes del numerador.
+#Calcula los términos del numerador excluyendo el punto xi
+#Construye una cadena de texto que representa el polinomio numerador.
+
+#--------------------------------------------------------------------------------------------------------
+
 # Función para escalar el numerador del polinomio L_i(x) por el denominador
+# O sea Ajusta el numerador del polinomio dividiéndolo por el denominador
 def numeradorEscalador(numerador_expandido, denominador):
     terminos = numerador_expandido.split(" + ")  # O sea Separa los términos del numerador
     escalado = []
@@ -42,9 +50,16 @@ def numeradorEscalador(numerador_expandido, denominador):
             escalado.append(f"(1 / {denominador:.1f}) * {coef:.1f}")
 
     return " + ".join(escalado)  #Aca se Retorna el numerador escalado como una cadena de texto
+# Separa los términos del numerador.
+# Divide cada término por el denominador.
+# Devuelve una cadena de texto que representa el numerador ajustado.
+
+
+#--------------------------------------------------------------------------------------------------------------
 
 #Esta es la Función para realizar la interpolación de Lagrange
-def lagrange_interpolation(puntos_x, puntos_y):
+#Calcula el polinomio interpolante P(x) usando la interpolación de Lagrange
+def interpolacion_lagrange(puntos_x, puntos_y):
     def L(k, x):
         termino = 1
         for i in range(len(puntos_x)):
@@ -63,6 +78,14 @@ def lagrange_interpolation(puntos_x, puntos_y):
 
     return P, valores_x, valores_y  # Retorna la función P(x) y los valores calculados por el programa
 
+
+# Define L(k,x) como el polinomio base de lagrange para cada k.
+# Define P(x) como la suma ponderada de los L(k,x).
+# Genera valores de x para graficar y evalúa P(x).
+# retorna la función P(x) y los valores calculados.
+
+#--------------------------------------------------------------------------------------------------------------
+
 # Función para imprimir las iteraciones individuales de Lagrange 
 def imprimir_polinomios(puntos_x, puntos_y):
     n = len(puntos_x)
@@ -76,14 +99,21 @@ def imprimir_polinomios(puntos_x, puntos_y):
                 denominador *= (puntos_x[i] - puntos_x[j])  # Calcula el denominador del polinomio L_i(x)
         numerador_escalado = numeradorEscalador(numerador, denominador)  # Escala el numerador por el denominador
 
+# Genera y muestra el polinomio Li(x) completo para cada i.
+# Calcula el numerador y el denominador, luego ajusta el numerador por el denominador.
+# Imprime la forma completa y ajustada para cada Li(x)
+
+
         if i > 0:
             P_str += "\n"
         P_str += f"L{i}(x):\n"
         P_str += f"L{i}(x) = ({numerador}) / ({denominador})\n"  # Se Muestra el polinomio L_i(x)
         P_str += f"L{i}(x) = {numerador_escalado}\n"  # Se Muestra el polinomio L_i(x) escalado
 
-    print(P_str)  # SeImprime todos los polinomios individuales L_i(x) O sea las iteraciones
+    print(P_str)  # SeImprime todos los polinomios individuales Li(x) O sea las iteraciones
 
+#--------------------------------------------------------------------------------------------------------------
+# Aca se ejecuta todo el proceso de la interpolacion de lagrange
 def main():
     num_puntos = int(input("Ingresa la cantidad de puntos (3 o 4): "))  # Se Ingresa la cantidad de puntos a interpolar yo solo defini 3 o 4
     puntos_x = []
@@ -101,7 +131,7 @@ def main():
         print(f"I[{i}]: ({puntos_x[i]}, {puntos_y[i]})")  # Muestra los puntos ingresados
 
     # Interpolación de Lagrange
-    P, valores_x, valores_y = lagrange_interpolation(puntos_x, puntos_y)
+    P, valores_x, valores_y = interpolacion_lagrange(puntos_x, puntos_y)
 
     # Imprimir polinomios individuales de Lagrange
     imprimir_polinomios(puntos_x, puntos_y)
@@ -128,6 +158,8 @@ def main():
     plt.title('Polinomio de Interpolación de Lagrange')  # Se muestra el Título del gráfico
     plt.grid(True)  #Se Activa la cuadrícula en el gráfico
     plt.show()  # Se Muestra el gráfico
+
+#____________________________________________________________________________________
 
 if __name__ == "__main__":
     main()  #Se Llama a la función principal al ejecutar el script
